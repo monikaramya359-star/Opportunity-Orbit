@@ -1,18 +1,30 @@
-OPPORTUNITY ORBIT — SOURCE CODE FOR VIEWING
+ 🌟 Opportunity Orbit — Source Code
 
-IMPORTANT:
-The ZIP contains source code, not just a website shortcut.
+**Opportunity Orbit** is a scholarship and examination discovery platform designed to help students explore opportunities based on their educational background and eligibility.
 
-To VIEW the code:
-1. Extract this ZIP file.
-2. Open the extracted folder.
-3. Open index.html.txt in Notepad or Visual Studio Code to read the HTML/JavaScript source.
-4. Open styles.css.txt to read the CSS source.
-5. You can also open the normal index.html and styles.css files in Visual Studio Code.
+ 📂 Project Files
 
-To RUN the website:
-- Double-click index.html in the extracted folder.
-- Keep index.html and styles.css in the same folder.
+- **`index.html`** — Contains the HTML structure, JavaScript, and website functionality.
+- **`styles.css`** — Contains the CSS styling used to design the website.
 
-If the website opens when you double-click index.html, that is normal: browsers render HTML as a website.
-To see the code, right-click the file and choose Open with > Visual Studio Code or Notepad, or open the .txt copies.
+ 💻 How to View the Source Code
+
+1. Open `index.html` in this GitHub repository to view the HTML and JavaScript source code.
+2. Open `styles.css` to view the website's styling code.
+3. Browse the files to understand how the website is structured and designed.
+
+You can also download the repository to your computer and open the files using Visual Studio Code or another code editor.
+
+ 🎯 Project Purpose
+
+Opportunity Orbit aims to help students discover scholarships and examinations that match their educational profiles and eligibility criteria.
+
+ 🛠️ Technologies Used
+
+- HTML
+- CSS
+- JavaScript
+
+📌 Repository
+
+This repository contains the source code for the Opportunity Orbit project.
