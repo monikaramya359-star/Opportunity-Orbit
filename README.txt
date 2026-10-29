@@ -24,6 +24,7 @@ Opportunity Orbit aims to help students discover scholarships and examinations t
 - HTML
 - CSS
 - JavaScript
+- Tailwind CSS
 
 📌 Repository
 
