@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Orbit — Complete Student Scholarship and Examination Discovery Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2"></div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="router.navigate('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Opportunity Orbit</span>
+                        <span class="block text-[10px] uppercase tracking-wider font-semibold text-slate-400">Scholarship & Exam Discovery</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <button onclick="router.navigate('home')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-indigo-600 hover:bg-slate-50" data-target="home">Home</button>
+                    <button onclick="router.navigate('scholarships')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-indigo-600 hover:bg-slate-50" data-target="scholarships">Scholarship Finder</button>
+                    <button onclick="router.navigate('exams')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-indigo-600 hover:bg-slate-50" data-target="exams">Exams for Me</button>
+                    <button onclick="router.navigate('dashboard')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-indigo-600 hover:bg-slate-50" data-target="dashboard">My Dashboard</button>
+                    <button onclick="router.navigate('profile')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-indigo-600 hover:bg-slate-50" data-target="profile">My Profile</button>
+                    <button onclick="router.navigate('saved')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-indigo-600 hover:bg-slate-50" data-target="saved">Saved</button>
+                    <button onclick="router.navigate('tracker')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-indigo-600 hover:bg-slate-50" data-target="tracker">Tracker</button>
+                </nav>
+
+                <!-- Right Actions / Auth -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <button onclick="router.navigate('profile')" class="flex items-center space-x-2 bg-indigo-50 border border-indigo-200 text-indigo-700 px-3.5 py-2 rounded-xl text-sm font-semibold hover:bg-indigo-100 transition">
+                        <i class="fa-solid fa-user-circle"></i>
+                        <span id="nav-profile-name">My Profile</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl" id="mobile-menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <button onclick="router.navigate('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">Home</button>
+            <button onclick="router.navigate('scholarships'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">Scholarship Finder</button>
+            <button onclick="router.navigate('exams'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">Exams for Me</button>
+            <button onclick="router.navigate('dashboard'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">My Dashboard</button>
+            <button onclick="router.navigate('profile'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">My Profile</button>
+            <button onclick="router.navigate('saved'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">Saved Opportunities</button>
+            <button onclick="router.navigate('tracker'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600">Application Tracker</button>
+        </div>
+    </header>
+
+    <!-- Main Content Viewport -->
+    <main id="app-container" class="flex-grow">
+        <!-- Dynamic content injected here by router -->
+    </main>
+
+    <!-- Opportunity Details Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+        <div id="modal-content-box" class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 relative animate-in fade-in zoom-in-95 duration-200">
+            <!-- Populated dynamically -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span class="text-white font-bold text-lg">Opportunity Orbit</span>
+                    </div>
+                    <p class="text-sm text-slate-400">
+                        Empowering students across India with intelligent scholarship discovery and examination guidance based on verified official criteria.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><button onclick="router.navigate('home')" class="hover:text-white transition">Home</button></li>
+                        <li><button onclick="router.navigate('scholarships')" class="hover:text-white transition">Scholarship Finder</button></li>
+                        <li><button onclick="router.navigate('exams')" class="hover:text-white transition">Exams for Me</button></li>
+                        <li><button onclick="router.navigate('dashboard')" class="hover:text-white transition">My Dashboard</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">User Portal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><button onclick="router.navigate('profile')" class="hover:text-white transition">Complete My Profile</button></li>
+                        <li><button onclick="router.navigate('saved')" class="hover:text-white transition">Saved Opportunities</button></li>
+                        <li><button onclick="router.navigate('tracker')" class="hover:text-white transition">Application Tracker</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Official Sources</h4>
+                    <p class="text-xs text-slate-400 mb-3">
+                        Verified against official government portals including National Scholarship Portal (NSP), AICTE, NTA, UPSC, and SSC.
+                    </p>
+                    <div class="flex space-x-3 text-slate-300">
+                        <a href="https://scholarships.gov.in" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition" title="NSP Portal"><i class="fa-solid fa-globe"></i></a>
+                        <a href="https://www.aicte-india.org" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition" title="AICTE"><i class="fa-solid fa-university"></i></a>
+                        <a href="https://www.nta.ac.in" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition" title="NTA"><i class="fa-solid fa-book"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs">
+                <p>&copy; 2026 Opportunity Orbit. Built for Indian Students & Aspirants.</p>
+                <p class="mt-4 sm:mt-0">Always verify official guidelines before submitting applications.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application Core Script -->
+    <script>
+        /* ================= DATASETS: SCHOLARSHIPS & EXAMS ================= */
+        const SCHOLARSHIPS = [
+            {
+                id: 'sch-1',
+                name: 'PM-USP Central Sector Scheme of Scholarship for College & University Students',
+                provider: 'Department of Higher Education, Ministry of Education',
+                category: 'Central Government',
+                description: 'Financial support to meritorious students from low-income families to meet a part of their day-to-day expenses while pursuing higher studies.',
+                educationLevels: ['Undergraduate', 'Postgraduate'],
+                eligibleCourses: ['Engineering / Technology', 'Medical', 'General Degree', 'Science', 'Commerce', 'Arts / Humanities', 'Law', 'Agriculture'],
+                minMarks: 80,
+                maxIncome: 450000,
+                eligibleCategories: ['General', 'OBC', 'SC', 'ST', 'EWS'],
+                amount: '₹12,000 to ₹20,000 per annum',
+                deadline: '2026-11-30',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-15',
+                rules: { minMarks: 80, maxIncome: 450000, levels: ['Undergraduate', 'Postgraduate'] }
+            },
+            {
+                id: 'sch-2',
+                name: 'AICTE Pragati Scholarship Scheme for Girl Students (Technical Degree)',
+                provider: 'All India Council for Technical Education (AICTE)',
+                category: 'Merit-cum-Means',
+                description: 'Encouraging girl students to pursue technical education (Degree level) with tuition fee support and incidental expenses.',
+                educationLevels: ['Undergraduate'],
+                eligibleCourses: ['Engineering / Technology', 'Architecture', 'Pharmacy'],
+                minMarks: 60,
+                maxIncome: 800000,
+                gender: 'Female',
+                eligibleCategories: ['General', 'OBC', 'SC', 'ST', 'EWS'],
+                amount: '₹50,000 per annum',
+                deadline: '2026-12-15',
+                status: 'Active',
+                url: 'https://www.aicte-india.org',
+                verifiedDate: '2026-09-10',
+                rules: { minMarks: 60, maxIncome: 800000, gender: 'Female', levels: ['Undergraduate'], courses: ['Engineering / Technology', 'Architecture', 'Pharmacy'] }
+            },
+            {
+                id: 'sch-3',
+                name: 'AICTE Saksham Scholarship Scheme for Differently-Abled Students',
+                provider: 'All India Council for Technical Education (AICTE)',
+                category: 'Disability-related',
+                description: 'Providing scholarship and support to specially-abled students pursuing technical education at degree or diploma levels.',
+                educationLevels: ['Undergraduate', 'Diploma'],
+                eligibleCourses: ['Engineering / Technology', 'Architecture', 'Pharmacy', 'Diploma'],
+                minMarks: 50,
+                maxIncome: 800000,
+                pwdRequired: true,
+                amount: '₹50,000 per annum',
+                deadline: '2026-12-15',
+                status: 'Active',
+                url: 'https://www.aicte-india.org',
+                verifiedDate: '2026-09-10',
+                rules: { minMarks: 50, maxIncome: 800000, pwdRequired: true, levels: ['Undergraduate', 'Diploma'] }
+            },
+            {
+                id: 'sch-4',
+                name: 'AICTE Swanath Scholarship Scheme for Orphans / Wards of COVID Victims',
+                provider: 'All India Council for Technical Education (AICTE)',
+                category: 'Central Government',
+                description: 'Financial assistance to orphans, wards of armed forces/paramilitary martyrs, and COVID-19 victims pursuing technical studies.',
+                educationLevels: ['Undergraduate', 'Diploma'],
+                eligibleCourses: ['Engineering / Technology', 'Architecture', 'Pharmacy', 'Diploma'],
+                minMarks: 50,
+                maxIncome: 800000,
+                amount: '₹50,000 per annum',
+                deadline: '2026-12-31',
+                status: 'Active',
+                url: 'https://www.aicte-india.org',
+                verifiedDate: '2026-09-01',
+                rules: { minMarks: 50, maxIncome: 800000 }
+            },
+            {
+                id: 'sch-5',
+                name: 'Ishan Uday Special Scholarship Scheme for North Eastern Region',
+                provider: 'University Grants Commission (UGC)',
+                category: 'State-specific',
+                description: 'Promotion of higher education and encouraging meritorious students belonging to the North Eastern States.',
+                educationLevels: ['Undergraduate'],
+                eligibleCourses: ['Engineering / Technology', 'Medical', 'General Degree', 'Science', 'Arts / Humanities', 'Commerce'],
+                minMarks: 50,
+                maxIncome: 450000,
+                domicile: 'North-East',
+                amount: '₹5,400 to ₹7,800 per month',
+                deadline: '2026-11-15',
+                status: 'Active',
+                url: 'https://www.ugc.ac.in',
+                verifiedDate: '2026-08-20',
+                rules: { minMarks: 50, maxIncome: 450000, levels: ['Undergraduate'] }
+            },
+            {
+                id: 'sch-6',
+                name: 'Post-Matric Scholarship for Students with Disabilities',
+                provider: 'Department of Empowerment of Persons with Disabilities',
+                category: 'Disability-related',
+                description: 'Financial assistance to students with disabilities for studying at post-matriculation or post-secondary stage.',
+                educationLevels: ['Class 11', 'Class 12', 'Diploma', 'Undergraduate', 'Postgraduate'],
+                eligibleCourses: ['All Courses'],
+                minMarks: 40,
+                maxIncome: 250000,
+                pwdRequired: true,
+                amount: 'Maintenance allowance + fee reimbursement',
+                deadline: '2026-12-30',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-12',
+                rules: { minMarks: 40, maxIncome: 250000, pwdRequired: true }
+            },
+            {
+                id: 'sch-7',
+                name: 'Post-Matric Scholarship for SC Students',
+                provider: 'Ministry of Social Justice and Empowerment',
+                category: 'Category-specific',
+                description: 'Enabling Scheduled Caste students to complete higher education with full financial coverage of tuition and maintenance.',
+                educationLevels: ['Class 11', 'Class 12', 'Diploma', 'Undergraduate', 'Postgraduate', 'PhD or research'],
+                eligibleCourses: ['All Courses'],
+                minMarks: 35,
+                maxIncome: 250000,
+                eligibleCategories: ['SC'],
+                amount: 'Full tuition fees + monthly allowance',
+                deadline: '2026-12-31',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-01',
+                rules: { maxIncome: 250000, eligibleCategories: ['SC'] }
+            },
+            {
+                id: 'sch-8',
+                name: 'Post-Matric Scholarship for ST Students',
+                provider: 'Ministry of Tribal Affairs',
+                category: 'Category-specific',
+                description: 'Financial support for Scheduled Tribe students pursuing recognized post-matriculation courses.',
+                educationLevels: ['Class 11', 'Class 12', 'Diploma', 'Undergraduate', 'Postgraduate', 'PhD or research'],
+                eligibleCourses: ['All Courses'],
+                minMarks: 35,
+                maxIncome: 250000,
+                eligibleCategories: ['ST'],
+                amount: 'Full tuition fees + monthly allowance',
+                deadline: '2026-12-31',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-01',
+                rules: { maxIncome: 250000, eligibleCategories: ['ST'] }
+            },
+            {
+                id: 'sch-9',
+                name: 'Post-Matric Scholarship for OBC Students',
+                provider: 'Ministry of Social Justice and Empowerment',
+                category: 'Category-specific',
+                description: 'Financial assistance to Other Backward Class students for post-matriculation studies.',
+                educationLevels: ['Class 11', 'Class 12', 'Diploma', 'Undergraduate', 'Postgraduate'],
+                eligibleCourses: ['All Courses'],
+                minMarks: 35,
+                maxIncome: 150000,
+                eligibleCategories: ['OBC'],
+                amount: 'Tuition and maintenance grant',
+                deadline: '2026-12-15',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-01',
+                rules: { maxIncome: 150000, eligibleCategories: ['OBC'] }
+            },
+            {
+                id: 'sch-10',
+                name: 'National Means-cum-Merit Scholarship Scheme (NMMSS)',
+                provider: 'Department of School Education and Literacy',
+                category: 'Merit-based',
+                description: 'Awarding scholarships to meritorious students of economically weaker sections to arrest drop out at class 8 and encourage continuation up to class 12.',
+                educationLevels: ['Class 9', 'Class 10', 'Class 11', 'Class 12'],
+                eligibleCourses: ['School Education'],
+                minMarks: 55,
+                maxIncome: 350000,
+                amount: '₹12,000 per annum',
+                deadline: '2026-10-31',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-08-15',
+                rules: { minMarks: 55, maxIncome: 350000, levels: ['Class 9', 'Class 10', 'Class 11', 'Class 12'] }
+            },
+            {
+                id: 'sch-11',
+                name: 'PM Young Achievers Scholarship Award Scheme for Vibrant India (PM YASASVI)',
+                provider: 'Ministry of Social Justice and Empowerment',
+                category: 'Central Government',
+                description: 'Top-class school education scholarship for OBC, EWS, and DNT students studying in identified top-class schools.',
+                educationLevels: ['Class 9', 'Class 10', 'Class 11', 'Class 12'],
+                eligibleCourses: ['School Education'],
+                minMarks: 60,
+                maxIncome: 250000,
+                eligibleCategories: ['OBC', 'EWS'],
+                amount: '₹75,000 to ₹1,25,000 per annum',
+                deadline: '2026-11-20',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-05',
+                rules: { minMarks: 60, maxIncome: 250000, eligibleCategories: ['OBC', 'EWS'] }
+            },
+            {
+                id: 'sch-12',
+                name: 'Prime Minister’s Research Fellowship (PMRF)',
+                provider: 'Ministry of Education',
+                category: 'Research & Higher Education',
+                description: 'Attracting the best talent for research in premier institutions (IITs, IISc, NITs) in India.',
+                educationLevels: ['PhD or research', 'Postgraduate'],
+                eligibleCourses: ['Engineering / Technology', 'Science', 'Medical'],
+                minMarks: 85,
+                amount: '₹70,000 to ₹80,000 per month + research grant',
+                deadline: '2026-12-10',
+                status: 'Active',
+                url: 'https://pmrf.in',
+                verifiedDate: '2026-09-18',
+                rules: { minMarks: 85, levels: ['PhD or research', 'Postgraduate'] }
+            },
+            {
+                id: 'sch-13',
+                name: 'National Fellowship and Scholarship for Higher Education of ST Students',
+                provider: 'Ministry of Tribal Affairs',
+                category: 'Category-specific',
+                description: 'Financial assistance for ST students pursuing M.Phil/Ph.D and professional courses in top-class institutes.',
+                educationLevels: ['Postgraduate', 'PhD or research'],
+                eligibleCourses: ['All Courses'],
+                minMarks: 50,
+                eligibleCategories: ['ST'],
+                amount: 'Full tuition fee + fellowship',
+                deadline: '2026-12-25',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-02',
+                rules: { eligibleCategories: ['ST'], levels: ['Postgraduate', 'PhD or research'] }
+            },
+            {
+                id: 'sch-14',
+                name: 'Merit-cum-Means Scholarship for Professional and Technical Courses (Minorities)',
+                provider: 'Ministry of Minority Affairs',
+                category: 'Merit-cum-Means',
+                description: 'Providing financial assistance to meritorious students belonging to minority communities for professional and technical courses.',
+                educationLevels: ['Undergraduate', 'Postgraduate'],
+                eligibleCourses: ['Engineering / Technology', 'Medical', 'Management', 'Law', 'Architecture'],
+                minMarks: 50,
+                maxIncome: 250000,
+                minorityRequired: true,
+                amount: 'Up to ₹20,000 per annum + maintenance',
+                deadline: '2026-11-30',
+                status: 'Active',
+                url: 'https://scholarships.gov.in',
+                verifiedDate: '2026-09-10',
+                rules: { minMarks: 50, maxIncome: 250000, minorityRequired: true, levels: ['Undergraduate', 'Postgraduate'] }
+            },
+            {
+                id: 'sch-15',
+                name: 'INSPIRE Fellowship for Higher Education (SHE)',
+                provider: 'Department of Science and Technology (DST)',
+                category: 'Merit-based',
+                description: 'Inspiring talented youth to undertake scientific research pursuits by offering scholarships for Bachelor and Master level science courses.',
+                educationLevels: ['Undergraduate', 'Postgraduate'],
+                eligibleCourses: ['Science', 'Engineering / Technology', 'Medical'],
+                minMarks: 85,
+                amount: '₹80,000 per annum',
+                deadline: '2026-12-05',
+                status: 'Active',
+                url: 'https://online-inspire.gov.in',
+                verifiedDate: '2026-09-15',
+                rules: { minMarks: 85, levels: ['Undergraduate', 'Postgraduate'], courses: ['Science', 'Engineering / Technology', 'Medical'] }
+            }
+        ];
+
+        const EXAMS = [
+            {
+                id: 'ex-1',
+                name: 'JEE Main (Joint Entrance Examination - Main)',
+                category: 'Entrance',
+                authority: 'National Testing Agency (NTA)',
+                purpose: 'Admission to undergraduate engineering programs (B.E./B.Tech) in NITs, IIITs, and CFTIs, and eligibility test for JEE Advanced.',
+                minQual: 'Class 12',
+                eligibleStreams: ['Engineering / Technology', 'Science'],
+                minMarks: 75, // 75% in Class 12 for NIT/IIIT admission criteria
+                maxAge: 25,
+                deadline: '2026-11-15',
+                examDate: '2027-01-22',
+                status: 'Active',
+                url: 'https://jeemain.nta.nic.in',
+                verifiedDate: '2026-09-20',
+                rules: { minQual: 'Class 12', minMarks: 75, streams: ['Engineering / Technology', 'Science'] }
+            },
+            {
+                id: 'ex-2',
+                name: 'JEE Advanced (Joint Entrance Examination - Advanced)',
+                category: 'Entrance',
+                authority: 'IIT Joint Implementation Committee',
+                purpose: 'Admission to Bachelor, Integrated Master and Dual Degree programs in all 23 IITs.',
+                minQual: 'Class 12',
+                eligibleStreams: ['Engineering / Technology', 'Science'],
+                minMarks: 75,
+                maxAge: 25,
+                deadline: '2027-05-05',
+                examDate: '2027-05-25',
+                status: 'Active',
+                url: 'https://jeeadv.ac.in',
+                verifiedDate: '2026-09-20',
+                rules: { minQual: 'Class 12', minMarks: 75, streams: ['Engineering / Technology', 'Science'] }
+            },
+            {
+                id: 'ex-3',
+                name: 'NEET UG (National Eligibility cum Entrance Test)',
+                category: 'Entrance',
+                authority: 'National Testing Agency (NTA)',
+                purpose: 'Admission to MBBS, BDS, AYUSH, and nursing undergraduate courses in medical institutions across India.',
+                minQual: 'Class 12',
+                eligibleStreams: ['Medical', 'Science'],
+                minMarks: 50,
+                maxAge: 30,
+                deadline: '2027-03-10',
+                examDate: '2027-05-07',
+                status: 'Active',
+                url: 'https://neet.nta.nic.in',
+                verifiedDate: '2026-09-18',
+                rules: { minQual: 'Class 12', minMarks: 50, streams: ['Medical', 'Science'] }
+            },
+            {
+                id: 'ex-4',
+                name: 'CUET UG (Common University Entrance Test)',
+                category: 'Entrance',
+                authority: 'National Testing Agency (NTA)',
+                purpose: 'Single-window entrance test for admission to undergraduate programs in Central Universities and participating institutions.',
+                minQual: 'Class 12',
+                eligibleStreams: ['All Courses'],
+                deadline: '2027-03-30',
+                examDate: '2027-05-15',
+                status: 'Active',
+                url: 'https://cuet.samarth.ac.in',
+                verifiedDate: '2026-09-15',
+                rules: { minQual: 'Class 12' }
+            },
+            {
+                id: 'ex-5',
+                name: 'CUET PG (Common University Entrance Test for Postgraduate)',
+                category: 'Entrance',
+                authority: 'National Testing Agency (NTA)',
+                purpose: 'Admission to postgraduate programs across central and participating universities.',
+                minQual: 'Undergraduate',
+                eligibleStreams: ['All Courses'],
+                deadline: '2027-02-15',
+                examDate: '2027-03-20',
+                status: 'Active',
+                url: 'https://pgcuet.samarth.ac.in',
+                verifiedDate: '2026-09-15',
+                rules: { minQual: 'Undergraduate' }
+            },
+            {
+                id: 'ex-6',
+                name: 'UPSC Civil Services Examination (CSE)',
+                category: 'Government Recruitment',
+                authority: 'Union Public Service Commission (UPSC)',
+                purpose: 'Recruitment to premier civil services of India including IAS, IPS, IFS, and Central Services Group A & B.',
+                minQual: 'Undergraduate',
+                eligibleStreams: ['All Courses'],
+                minAge: 21,
+                maxAge: 32,
+                deadline: '2027-03-05',
+                examDate: '2027-05-28',
+                status: 'Active',
+                url: 'https://upsc.gov.in',
+                verifiedDate: '2026-09-22',
+                rules: { minQual: 'Undergraduate', minAge: 21, maxAge: 32 }
+            },
+            {
+                id: 'ex-7',
+                name: 'SSC CGL (Staff Selection Commission - Combined Graduate Level)',
+                category: 'Government Recruitment',
+                authority: 'Staff Selection Commission (SSC)',
+                purpose: 'Recruitment of graduates to various Group B and Group C posts in ministries, departments, and organizations of Govt of India.',
+                minQual: 'Undergraduate',
+                eligibleStreams: ['All Courses'],
+                minAge: 18,
+                maxAge: 32,
+                deadline: '2026-11-25',
+                examDate: '2027-02-10',
+                status: 'Active',
+                url: 'https://ssc.gov.in',
+                verifiedDate: '2026-09-10',
+                rules: { minQual: 'Undergraduate', minAge: 18, maxAge: 32 }
+            },
+            {
+                id: 'ex-8',
+                name: 'SSC CHSL (Combined Higher Secondary Level Examination)',
+                category: 'Government Recruitment',
+                authority: 'Staff Selection Commission (SSC)',
+                purpose: 'Recruitment for Lower Divisional Clerk (LDC), Junior Secretariat Assistant (JSA), and Data Entry Operator (DEO) posts.',
+                minQual: 'Class 12',
+                eligibleStreams: ['All Courses'],
+                minAge: 18,
+                maxAge: 27,
+                deadline: '2026-12-10',
+                examDate: '2027-03-15',
+                status: 'Active',
+                url: 'https://ssc.gov.in',
+                verifiedDate: '2026-09-10',
+                rules: { minQual: 'Class 12', minAge: 18, maxAge: 27 }
+            },
+            {
+                id: 'ex-9',
+                name: 'IBPS PO (Institute of Banking Personnel Selection Probationary Officer)',
+                category: 'Competitive',
+                authority: 'IBPS',
+                purpose: 'Recruitment of Probationary Officers / Management Trainees in participating public sector banks.',
+                minQual: 'Undergraduate',
+                eligibleStreams: ['All Courses'],
+                minAge: 20,
+                maxAge: 30,
+                deadline: '2026-08-30',
+                examDate: '2026-10-15',
+                status: 'Active',
+                url: 'https://www.ibps.in',
+                verifiedDate: '2026-08-01',
+                rules: { minQual: 'Undergraduate', minAge: 20, maxAge: 30 }
+            },
+            {
+                id: 'ex-10',
+                name: 'RRB NTPC (Railway Recruitment Board - Non-Technical Popular Categories)',
+                category: 'Government Recruitment',
+                authority: 'Ministry of Railways',
+                purpose: 'Recruitment for undergraduate and graduate posts such as Junior Clerk, Accounts Clerk, Goods Guard, and Station Master in Indian Railways.',
+                minQual: 'Class 12',
+                eligibleStreams: ['All Courses'],
+                minAge: 18,
+                maxAge: 33,
+                deadline: '2026-11-10',
+                examDate: '2027-02-20',
+                status: 'Active',
+                url: 'https://www.rrcb.gov.in',
+                verifiedDate: '2026-09-05',
+                rules: { minQual: 'Class 12', minAge: 18, maxAge: 33 }
+            }
+        ];
+
+        /* ================= STATE MANAGEMENT ================= */
+        const STORAGE_KEYS = {
+            PROFILE: 'opp_orbit_student_profile',
+            SAVED: 'opp_orbit_saved_items',
+            TRACKER: 'opp_orbit_tracker_items'
+        };
+
+        // BLANK profile for new students (No fake/hardcoded default user)
+        const DEFAULT_PROFILE = {
+            name: '',
+            state: '',
+            nationality: 'Indian',
+            dob: '',
+            age: '',
+            eduLevel: '',
+            course: '',
+            stream: '',
+            yearOfStudy: '',
+            institutionType: '',
+            institutionName: '',
+            prevQualification: '',
+            board: '',
+            marks: '',
+            incomeRange: '',
+            exactIncome: '',
+            incomeCertificate: '',
+            category: '',
+            ews: 'No',
+            pwd: 'No',
+            minority: 'No',
+            gender: '',
+            domicileState: '',
+            firstGen: 'No',
+            examScores: ''
+        };
+
+        let studentProfile = loadProfile();
+        let savedItems = loadSavedItems();
+        let trackerItems = loadTrackerItems();
+
+        function loadProfile() {
+            const stored = localStorage.getItem(STORAGE_KEYS.PROFILE);
+            if (stored) {
+                try { return JSON.parse(stored); } catch(e) { return {...DEFAULT_PROFILE}; }
+            }
+            return {...DEFAULT_PROFILE};
+        }
+
+        function saveProfileToStorage(profile) {
+            localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(profile));
+            studentProfile = profile;
+            updateNavProfileName();
+            showToast('Profile saved successfully!', 'success');
+        }
+
+        function loadSavedItems() {
+            const stored = localStorage.getItem(STORAGE_KEYS.SAVED);
+            if (stored) {
+                try { return JSON.parse(stored); } catch(e) { return []; }
+            }
+            return [];
+        }
+
+        function saveSavedItemsToStorage() {
+            localStorage.setItem(STORAGE_KEYS.SAVED, JSON.stringify(savedItems));
+        }
+
+        function loadTrackerItems() {
+            const stored = localStorage.getItem(STORAGE_KEYS.TRACKER);
+            if (stored) {
+                try { return JSON.parse(stored); } catch(e) { return []; }
+            }
+            return [];
+        }
+
+        function saveTrackerItemsToStorage() {
+            localStorage.setItem(STORAGE_KEYS.TRACKER, JSON.stringify(trackerItems));
+        }
+
+        function updateNavProfileName() {
+            const nameEl = document.getElementById('nav-profile-name');
+            if (nameEl) {
+                nameEl.textContent = studentProfile.name ? studentProfile.name.split(' ')[0] : 'My Profile';
+            }
+        }
+
+        /* ================= PROFILE COMPLETION & ELIGIBILITY CALCULATOR ================= */
+        function calculateProfileCompletion() {
+            const requiredFields = [
+                studentProfile.name,
+                studentProfile.state,
+                studentProfile.dob,
+                studentProfile.eduLevel,
+                studentProfile.course,
+                studentProfile.stream,
+                studentProfile.yearOfStudy,
+                studentProfile.marks,
+                studentProfile.exactIncome,
+                studentProfile.category,
+                studentProfile.gender
+            ];
+            const filled = requiredFields.filter(f => f !== '' && f !== null && f !== undefined).length;
+            return Math.round((filled / requiredFields.length) * 100);
+        }
+
+        // Rule evaluation engine for scholarships
+        function evaluateScholarship(sch, profile) {
+            let reasons = [];
+            let missing = [];
+            let failed = false;
+            let metCount = 0;
+            let totalEvaluated = 0;
+
+            // 1. Education Level check
+            if (!profile.eduLevel) {
+                missing.push('Enter your current education level in your profile.');
+            } else {
+                totalEvaluated++;
+                if (sch.educationLevels && !sch.educationLevels.includes(profile.eduLevel) && !sch.educationLevels.includes('All Courses')) {
+                    failed = true;
+                    reasons.push({ cond: 'Education Level', user: profile.eduLevel, req: sch.educationLevels.join(', '), status: 'Not Met' });
+                } else {
+                    metCount++;
+                    reasons.push({ cond: 'Education Level', user: profile.eduLevel, req: sch.educationLevels ? sch.educationLevels.join(', ') : 'Any', status: 'Met' });
+                }
+            }
+
+            // 2. Marks check
+            if (sch.rules && sch.rules.minMarks) {
+                if (!profile.marks || isNaN(profile.marks)) {
+                    missing.push('Enter your academic performance marks percentage.');
+                } else {
+                    totalEvaluated++;
+                    if (parseFloat(profile.marks) < sch.rules.minMarks) {
+                        failed = true;
+                        reasons.push({ cond: 'Marks Percentage', user: profile.marks + '%', req: 'Minimum ' + sch.rules.minMarks + '%', status: 'Not Met' });
+                    } else {
+                        metCount++;
+                        reasons.push({ cond: 'Marks Percentage', user: profile.marks + '%', req: 'Minimum ' + sch.rules.minMarks + '%', status: 'Met' });
+                    }
+                }
+            }
+
+            // 3. Family Income check
+            if (sch.rules && sch.rules.maxIncome) {
+                if (!profile.exactIncome || isNaN(profile.exactIncome)) {
+                    missing.push('Enter your annual family income.');
+                } else {
+                    totalEvaluated++;
+                    if (parseFloat(profile.exactIncome) > sch.rules.maxIncome) {
+                        failed = true;
+                        reasons.push({ cond: 'Family Income', user: '₹' + Number(profile.exactIncome).toLocaleString('en-IN'), req: 'Maximum ₹' + Number(sch.rules.maxIncome).toLocaleString('en-IN'), status: 'Not Met' });
+                    } else {
+                        metCount++;
+                        reasons.push({ cond: 'Family Income', user: '₹' + Number(profile.exactIncome).toLocaleString('en-IN'), req: 'Maximum ₹' + Number(sch.rules.maxIncome).toLocaleString('en-IN'), status: 'Met' });
+                    }
+                }
+            }
+
+            // 4. Gender check
+            if (sch.rules && sch.rules.gender) {
+                if (!profile.gender) {
+                    missing.push('Select your gender in your profile.');
+                } else {
+                    totalEvaluated++;
+                    if (profile.gender !== sch.rules.gender) {
+                        failed = true;
+                        reasons.push({ cond: 'Gender Requirement', user: profile.gender, req: sch.rules.gender, status: 'Not Met' });
+                    } else {
+                        metCount++;
+                        reasons.push({ cond: 'Gender Requirement', user: profile.gender, req: sch.rules.gender, status: 'Met' });
+                    }
+                }
+            }
+
+            // 5. PwD check
+            if (sch.rules && sch.rules.pwdRequired) {
+                totalEvaluated++;
+                if (profile.pwd !== 'Yes') {
+                    failed = true;
+                    reasons.push({ cond: 'Disability Status (PwD)', user: profile.pwd || 'No', req: 'Required (Yes)', status: 'Not Met' });
+                } else {
+                    metCount++;
+                    reasons.push({ cond: 'Disability Status (PwD)', user: 'Yes', req: 'Required (Yes)', status: 'Met' });
+                }
+            }
+
+            // 6. Category check
+            if (sch.rules && sch.rules.eligibleCategories) {
+                if (!profile.category) {
+                    missing.push('Select your social category (General, OBC, SC, ST, EWS).');
+                } else {
+                    totalEvaluated++;
+                    if (!sch.rules.eligibleCategories.includes(profile.category)) {
+                        failed = true;
+                        reasons.push({ cond: 'Category', user: profile.category, req: sch.rules.eligibleCategories.join(', '), status: 'Not Met' });
+                    } else {
+                        metCount++;
+                        reasons.push({ cond: 'Category', user: profile.category, req: sch.rules.eligibleCategories.join(', '), status: 'Met' });
+                    }
+                }
+            }
+
+            // Determine badge status
+            if (failed) {
+                return { status: 'Not Matching Current Criteria', badgeClass: 'bg-red-50 text-red-700 border-red-200', icon: 'fa-circle-xmark text-red-600', textClass: 'text-red-700', reasons, missing };
+            } else if (missing.length > 0 || totalEvaluated === 0) {
+                return { status: 'Check Eligibility', badgeClass: 'bg-amber-50 text-amber-700 border-amber-200', icon: 'fa-circle-exclamation text-amber-600', textClass: 'text-amber-700', reasons, missing };
+            } else {
+                return { status: 'Likely Eligible', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'fa-circle-check text-emerald-600', textClass: 'text-emerald-700', reasons, missing };
+            }
+        }
+
+        // Rule evaluation engine for examinations
+        function evaluateExam(ex, profile) {
+            let reasons = [];
+            let missing = [];
+            let failed = false;
+
+            // 1. Minimum Qualification check
+            if (ex.rules && ex.rules.minQual) {
+                if (!profile.eduLevel) {
+                    missing.push('Enter your current education level to evaluate exam eligibility.');
+                } else {
+                    // Simple hierarchy comparison
+                    const levels = ['Class 9', 'Class 10', 'Class 11', 'Class 12', 'Diploma', 'Undergraduate', 'Postgraduate', 'PhD or research'];
+                    const userIdx = levels.indexOf(profile.eduLevel);
+                    const reqIdx = levels.indexOf(ex.rules.minQual);
+                    if (userIdx !== -1 && reqIdx !== -1 && userIdx < reqIdx) {
+                        failed = true;
+                        reasons.push({ cond: 'Minimum Qualification', user: profile.eduLevel, req: ex.rules.minQual + ' or above', status: 'Not Met' });
+                    } else {
+                        reasons.push({ cond: 'Minimum Qualification', user: profile.eduLevel, req: ex.rules.minQual + ' or above', status: 'Met' });
+                    }
+                }
+            }
+
+            // 2. Marks check
+            if (ex.rules && ex.rules.minMarks) {
+                if (!profile.marks || isNaN(profile.marks)) {
+                    missing.push('Enter your academic marks percentage.');
+                } else {
+                    if (parseFloat(profile.marks) < ex.rules.minMarks) {
+                        failed = true;
+                        reasons.push({ cond: 'Qualifying Exam Marks', user: profile.marks + '%', req: 'Minimum ' + ex.rules.minMarks + '%', status: 'Not Met' });
+                    } else {
+                        reasons.push({ cond: 'Qualifying Exam Marks', user: profile.marks + '%', req: 'Minimum ' + ex.rules.minMarks + '%', status: 'Met' });
+                    }
+                }
+            }
+
+            // 3. Age check
+            if (ex.rules && ex.rules.maxAge) {
+                if (!profile.age || isNaN(profile.age)) {
+                    missing.push('Enter your age or date of birth in your profile.');
+                } else {
+                    const ageNum = parseInt(profile.age);
+                    if (ex.rules.minAge && ageNum < ex.rules.minAge) {
+                        failed = true;
+                        reasons.push({ cond: 'Age Limit', user: ageNum + ' years', req: 'Min ' + ex.rules.minAge + ' to Max ' + ex.rules.maxAge + ' years', status: 'Not Met' });
+                    } else if (ageNum > ex.rules.maxAge) {
+                        failed = true;
+                        reasons.push({ cond: 'Age Limit', user: ageNum + ' years', req: 'Maximum ' + ex.rules.maxAge + ' years', status: 'Not Met' });
+                    } else {
+                        reasons.push({ cond: 'Age Limit', user: ageNum + ' years', req: 'Within limit (Max ' + ex.rules.maxAge + ')', status: 'Met' });
+                    }
+                }
+            }
+
+            if (failed) {
+                return { status: 'Not Matching Current Criteria', badgeClass: 'bg-red-50 text-red-700 border-red-200', icon: 'fa-circle-xmark text-red-600', textClass: 'text-red-700', reasons, missing };
+            } else if (missing.length > 0) {
+                return { status: 'Check Eligibility', badgeClass: 'bg-amber-50 text-amber-700 border-amber-200', icon: 'fa-circle-exclamation text-amber-600', textClass: 'text-amber-700', reasons, missing };
+            } else {
+                return { status: 'Likely Eligible', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'fa-circle-check text-emerald-600', textClass: 'text-emerald-700', reasons, missing };
+            }
+        }
+
+        /* ================= ROUTER & VIEW CONTROLLER ================= */
+        const router = {
+            currentRoute: 'home',
+            navigate(route, param = null) {
+                this.currentRoute = route;
+                window.scrollTo(0, 0);
+                renderView(route, param);
+                updateActiveNav(route);
+            }
+        };
+
+        function updateActiveNav(route) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-target') === route) {
+                    btn.classList.add('bg-indigo-50', 'text-indigo-600');
+                    btn.classList.remove('text-slate-600');
+                } else {
+                    btn.classList.remove('bg-indigo-50', 'text-indigo-600');
+                    btn.classList.add('text-slate-600');
+                }
+            });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgCol = type === 'success' ? 'bg-slate-900 text-white' : 'bg-rose-600 text-white';
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-exclamation text-rose-200';
+            
+            toast.className = `flex items-center space-x-3 px-4 py-3 rounded-xl shadow-xl text-sm font-medium ${bgCol} animate-in slide-in-from-bottom-5 duration-300`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition', 'duration-300');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        /* ================= VIEW RENDERERS ================= */
+        function renderView(route, param) {
+            const container = document.getElementById('app-container');
+            if (!container) return;
+
+            switch(route) {
+                case 'home':
+                    container.innerHTML = renderHome();
+                    break;
+                case 'scholarships':
+                    container.innerHTML = renderScholarshipsPage();
+                    initScholarshipListeners();
+                    break;
+                case 'exams':
+                    container.innerHTML = renderExamsPage();
+                    initExamListeners();
+                    break;
+                case 'dashboard':
+                    container.innerHTML = renderDashboardPage();
+                    break;
+                case 'profile':
+                    container.innerHTML = renderProfilePage();
+                    initProfileListeners();
+                    break;
+                case 'saved':
+                    container.innerHTML = renderSavedPage();
+                    break;
+                case 'tracker':
+                    container.innerHTML = renderTrackerPage();
+                    initTrackerListeners();
+                    break;
+                default:
+                    container.innerHTML = renderHome();
+            }
+        }
+
+        /* --- 1. HOME PAGE --- */
+        function renderHome() {
+            const completion = calculateProfileCompletion();
+            return `
+                <!-- Hero Section -->
+                <div class="relative overflow-hidden bg-gradient-to-b from-indigo-950 via-slate-900 to-indigo-900 text-white py-20 px-4 sm:px-6 lg:px-8">
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="max-w-5xl mx-auto text-center relative z-10 space-y-6">
+                        <div class="inline-flex items-center space-x-2 bg-indigo-500/20 border border-indigo-400/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-indigo-300 backdrop-blur-md">
+                            <i class="fa-solid fa-sparkles"></i>
+                            <span>AI-Powered Eligibility Engine for Indian Students</span>
+                        </div>
+                        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">
+                            Find Scholarships and Exams <span class="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">That Fit You</span>
+                        </h1>
+                        <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                            Tell us about your studies once. Discover scholarships and exams that fit your profile—and take the next step towards your future.
+                        </p>
+                        <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                            <button onclick="router.navigate('scholarships')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-3 text-base">
+                                <i class="fa-solid fa-award"></i>
+                                <span>Find Scholarships</span>
+                            </button>
+                            <button onclick="router.navigate('exams')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold px-8 py-4 rounded-xl transition flex items-center justify-center space-x-3 text-base">
+                                <i class="fa-solid fa-book-open"></i>
+                                <span>Explore Exams</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Onboarding Banner -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+                    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="space-y-2 text-center md:text-left">
+                            <div class="flex items-center justify-center md:justify-start space-x-3">
+                                <span class="w-3 h-3 rounded-full ${completion === 100 ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse"></span>
+                                <h3 class="text-lg font-bold text-slate-900">Your profile completion: ${completion}%</h3>
+                            </div>
+                            <p class="text-sm text-slate-600">
+                                ${completion === 0 ? 'Welcome to Opportunity Orbit! Complete your profile to discover scholarships and examinations that match your qualifications.' : 'Update your academic and financial records to unlock precise preliminary eligibility matches.'}
+                            </p>
+                        </div>
+                        <button onclick="router.navigate('profile')" class="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-bold px-6 py-3 rounded-xl transition flex items-center space-x-2 shrink-0">
+                            <i class="fa-solid fa-user-pen"></i>
+                            <span>Complete My Profile</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                        <h2 class="text-3xl font-extrabold text-slate-900">Designed for Smart Students & Aspirants</h2>
+                        <p class="text-slate-600">Everything you need to discover financial assistance and career entrance examinations in one unified platform.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 hover:shadow-lg transition group">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-6 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Scholarship Finder</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed">Discover central, state, merit-based, and category-specific financial assistance schemes mapped to your profile.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 hover:shadow-lg transition group">
+                            <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center text-xl font-bold mb-6 group-hover:bg-violet-600 group-hover:text-white transition">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Exams for Me</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed">Find entrance examinations (JEE, NEET, CUET), competitive tests, and government recruitment exams (UPSC, SSC, RRB).</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 hover:shadow-lg transition group">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-6 group-hover:bg-emerald-600 group-hover:text-white transition">
+                                <i class="fa-solid fa-calculator"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Smart Eligibility Checker</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed">Instantly understand whether you are Likely Eligible, need to check missing criteria, or do not match rules.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 hover:shadow-lg transition group">
+                            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold mb-6 group-hover:bg-amber-600 group-hover:text-white transition">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Saved Opportunities</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed">Bookmark scholarships and examinations to revisit them quickly without searching again.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 hover:shadow-lg transition group">
+                            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl font-bold mb-6 group-hover:bg-rose-600 group-hover:text-white transition">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Application Tracker</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed">Track application progress, statuses (Submitted, Approved, Under Review), deadlines, and personal notes.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 hover:shadow-lg transition group">
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Personalized Dashboard</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed">View matching opportunities, application milestones, and profile improvement suggestions in one central hub.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How it works -->
+                <div class="bg-slate-100 py-20 border-y border-slate-200">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center max-w-2xl mx-auto mb-16">
+                            <h2 class="text-3xl font-extrabold text-slate-900">How Opportunity Orbit Works</h2>
+                            <p class="text-slate-600 mt-2">Three simple steps to unlock verified academic opportunities.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center space-y-4">
+                                <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center mx-auto text-lg shadow-md">1</div>
+                                <h3 class="font-bold text-lg text-slate-900">Complete Your Profile</h3>
+                                <p class="text-sm text-slate-600">Enter your education level, course, marks, family income, and category once securely in your profile.</p>
+                            </div>
+                            <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center space-y-4">
+                                <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center mx-auto text-lg shadow-md">2</div>
+                                <h3 class="font-bold text-lg text-slate-900">Discover Opportunities</h3>
+                                <p class="text-sm text-slate-600">Our rule-based engine evaluates your profile against official scholarship and exam requirements instantly.</p>
+                            </div>
+                            <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center space-y-4">
+                                <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center mx-auto text-lg shadow-md">3</div>
+                                <h3 class="font-bold text-lg text-slate-900">Review & Apply</h3>
+                                <p class="text-sm text-slate-600">Inspect condition breakdowns, track application milestones, and apply directly on official portals.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* --- 2. SCHOLARSHIP FINDER PAGE --- */
+        let scholarshipFilterState = { search: '', category: 'All', level: 'All', status: 'All', eligibility: 'All' };
+
+        function renderScholarshipsPage() {
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-slate-900">Scholarship Finder</h1>
+                            <p class="text-sm text-slate-600">Discover government and institutional financial assistance evaluated against your profile.</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg font-semibold border border-indigo-200">
+                                <i class="fa-solid fa-shield-halved mr-1"></i> Verified Official Schemes
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filters Bar -->
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200 mb-8 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="md:col-span-2 relative">
+                                <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                                <input type="text" id="sch-search-input" value="${scholarshipFilterState.search}" placeholder="Search scholarship name, provider, or keywords..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                            </div>
+                            <div>
+                                <select id="sch-filter-category" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                    <option value="All">All Categories</option>
+                                    <option value="Central Government" ${scholarshipFilterState.category === 'Central Government' ? 'selected' : ''}>Central Government</option>
+                                    <option value="Merit-cum-Means" ${scholarshipFilterState.category === 'Merit-cum-Means' ? 'selected' : ''}>Merit-cum-Means</option>
+                                    <option value="Merit-based" ${scholarshipFilterState.category === 'Merit-based' ? 'selected' : ''}>Merit-based</option>
+                                    <option value="Disability-related" ${scholarshipFilterState.category === 'Disability-related' ? 'selected' : ''}>Disability-related</option>
+                                    <option value="Category-specific" ${scholarshipFilterState.category === 'Category-specific' ? 'selected' : ''}>Category-specific</option>
+                                    <option value="Research & Higher Education" ${scholarshipFilterState.category === 'Research & Higher Education' ? 'selected' : ''}>Research & Higher Education</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="sch-filter-eligibility" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                    <option value="All">All Eligibility Status</option>
+                                    <option value="Likely Eligible" ${scholarshipFilterState.eligibility === 'Likely Eligible' ? 'selected' : ''}>Likely Eligible</option>
+                                    <option value="Check Eligibility" ${scholarshipFilterState.eligibility === 'Check Eligibility' ? 'selected' : ''}>Check Eligibility</option>
+                                    <option value="Not Matching Current Criteria" ${scholarshipFilterState.eligibility === 'Not Matching Current Criteria' ? 'selected' : ''}>Not Matching Current Criteria</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scholarship Cards Grid -->
+                    <div id="scholarships-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            `;
+        }
+
+        function initScholarshipListeners() {
+            renderScholarshipCards();
+            document.getElementById('sch-search-input').addEventListener('input', (e) => {
+                scholarshipFilterState.search = e.target.value;
+                renderScholarshipCards();
+            });
+            document.getElementById('sch-filter-category').addEventListener('change', (e) => {
+                scholarshipFilterState.category = e.target.value;
+                renderScholarshipCards();
+            });
+            document.getElementById('sch-filter-eligibility').addEventListener('change', (e) => {
+                scholarshipFilterState.eligibility = e.target.value;
+                renderScholarshipCards();
+            });
+        }
+
+        function renderScholarshipCards() {
+            const grid = document.getElementById('scholarships-grid');
+            if (!grid) return;
+
+            const filtered = SCHOLARSHIPS.filter(sch => {
+                const matchesSearch = sch.name.toLowerCase().includes(scholarshipFilterState.search.toLowerCase()) || sch.provider.toLowerCase().includes(scholarshipFilterState.search.toLowerCase());
+                const matchesCat = scholarshipFilterState.category === 'All' || sch.category === scholarshipFilterState.category;
+                const evalRes = evaluateScholarship(sch, studentProfile);
+                const matchesElig = scholarshipFilterState.eligibility === 'All' || evalRes.status === scholarshipFilterState.eligibility;
+                return matchesSearch && matchesCat && matchesElig;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
+                        <h3 class="text-lg font-bold text-slate-700">No scholarships found matching your filters</h3>
+                        <p class="text-sm text-slate-500 mt-1">Try adjusting your search query or eligibility filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(sch => {
+                const evalRes = evaluateScholarship(sch, studentProfile);
+                const isSaved = savedItems.some(i => i.id === sch.id);
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start gap-2">
+                                <span class="text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md">${sch.category}</span>
+                                <span class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${evalRes.badgeClass}">
+                                    <i class="fa-solid ${evalRes.icon}"></i>
+                                    <span>${evalRes.status}</span>
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base line-clamp-2 mb-1">${sch.name}</h3>
+                                <p class="text-xs text-slate-500">${sch.provider}</p>
+                            </div>
+                            <p class="text-xs text-slate-600 line-clamp-3">${sch.description}</p>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
+                                <div class="text-xs font-semibold text-slate-700 flex justify-between">
+                                    <span>Benefit:</span>
+                                    <span class="text-indigo-600">${sch.amount}</span>
+                                </div>
+                                <div class="text-xs font-semibold text-slate-700 flex justify-between">
+                                    <span>Deadline:</span>
+                                    <span class="text-slate-900">${sch.deadline}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between gap-3">
+                            <button onclick="openDetailModal('scholarship', '${sch.id}')" class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold py-2.5 px-4 rounded-xl transition">
+                                View Details & Why?
+                            </button>
+                            <button onclick="toggleSaveItem('${sch.id}', 'scholarship')" class="w-10 h-10 rounded-xl border ${isSaved ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'} flex items-center justify-center transition" title="${isSaved ? 'Saved' : 'Save Opportunity'}">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* --- 3. EXAMS FOR ME PAGE --- */
+        let examFilterState = { search: '', category: 'All', eligibility: 'All' };
+
+        function renderExamsPage() {
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-slate-900">Exams for Me</h1>
+                            <p class="text-sm text-slate-600">Discover entrance examinations, competitive tests, and government recruitment exams.</p>
+                        </div>
+                        <span class="text-xs bg-violet-50 text-violet-700 px-3 py-1.5 rounded-lg font-semibold border border-violet-200">
+                            <i class="fa-solid fa-book-open mr-1"></i> National & State Examination Board
+                        </span>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200 mb-8 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="relative md:col-span-2">
+                                <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                                <input type="text" id="exam-search-input" value="${examFilterState.search}" placeholder="Search exam name, authority, or purpose..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                            </div>
+                            <div>
+                                <select id="exam-filter-category" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                    <option value="All">All Categories</option>
+                                    <option value="Entrance" ${examFilterState.category === 'Entrance' ? 'selected' : ''}>Entrance Examinations</option>
+                                    <option value="Government Recruitment" ${examFilterState.category === 'Government Recruitment' ? 'selected' : ''}>Government Recruitment</option>
+                                    <option value="Competitive" ${examFilterState.category === 'Competitive' ? 'selected' : ''}>Competitive Exams</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Grid -->
+                    <div id="exams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            `;
+        }
+
+        function initExamListeners() {
+            renderExamCards();
+            document.getElementById('exam-search-input').addEventListener('input', (e) => {
+                examFilterState.search = e.target.value;
+                renderExamCards();
+            });
+            document.getElementById('exam-filter-category').addEventListener('change', (e) => {
+                examFilterState.category = e.target.value;
+                renderExamCards();
+            });
+        }
+
+        function renderExamCards() {
+            const grid = document.getElementById('exams-grid');
+            if (!grid) return;
+
+            const filtered = EXAMS.filter(ex => {
+                const matchesSearch = ex.name.toLowerCase().includes(examFilterState.search.toLowerCase()) || ex.authority.toLowerCase().includes(examFilterState.search.toLowerCase());
+                const matchesCat = examFilterState.category === 'All' || ex.category === examFilterState.category;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
+                        <h3 class="text-lg font-bold text-slate-700">No examinations found</h3>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(ex => {
+                const evalRes = evaluateExam(ex, studentProfile);
+                const isSaved = savedItems.some(i => i.id === ex.id);
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start gap-2">
+                                <span class="text-[11px] font-bold uppercase tracking-wider bg-violet-50 text-violet-700 px-2.5 py-1 rounded-md">${ex.category}</span>
+                                <span class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${evalRes.badgeClass}">
+                                    <i class="fa-solid ${evalRes.icon}"></i>
+                                    <span>${evalRes.status}</span>
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base line-clamp-2 mb-1">${ex.name}</h3>
+                                <p class="text-xs text-slate-500">${ex.authority}</p>
+                            </div>
+                            <p class="text-xs text-slate-600 line-clamp-3">${ex.purpose}</p>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
+                                <div class="text-xs font-semibold text-slate-700 flex justify-between">
+                                    <span>Exam Date:</span>
+                                    <span class="text-slate-900">${ex.examDate}</span>
+                                </div>
+                                <div class="text-xs font-semibold text-slate-700 flex justify-between">
+                                    <span>Min Qualification:</span>
+                                    <span class="text-indigo-600">${ex.minQual}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between gap-3">
+                            <button onclick="openDetailModal('exam', '${ex.id}')" class="flex-1 bg-violet-50 hover:bg-violet-100 text-violet-700 text-xs font-bold py-2.5 px-4 rounded-xl transition">
+                                View Details & Why?
+                            </button>
+                            <button onclick="toggleSaveItem('${ex.id}', 'exam')" class="w-10 h-10 rounded-xl border ${isSaved ? 'bg-violet-600 text-white border-violet-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'} flex items-center justify-center transition" title="${isSaved ? 'Saved' : 'Save Exam'}">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* --- 4. MY DASHBOARD PAGE --- */
+        function renderDashboardPage() {
+            const completion = calculateProfileCompletion();
+            const eligibleSch = SCHOLARSHIPS.filter(s => evaluateScholarship(s, studentProfile).status === 'Likely Eligible').length;
+            const checkSch = SCHOLARSHIPS.filter(s => evaluateScholarship(s, studentProfile).status === 'Check Eligibility').length;
+            const matchingEx = EXAMS.filter(e => evaluateExam(e, studentProfile).status === 'Likely Eligible').length;
+            const inProgressApps = trackerItems.filter(t => t.status !== 'Approved' && t.status !== 'Rejected').length;
+
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+                    <!-- Dashboard Header -->
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-slate-900">My Dashboard</h1>
+                            <p class="text-sm text-slate-600">Your personalized overview of matching scholarships, exams, and application progress.</p>
+                        </div>
+                        <button onclick="router.navigate('profile')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold px-5 py-3 rounded-xl shadow-md transition flex items-center space-x-2">
+                            <i class="fa-solid fa-user-pen"></i>
+                            <span>Edit Student Profile (${completion}%)</span>
+                        </button>
+                    </div>
+
+                    <!-- Summary Metric Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-extrabold text-slate-900">${eligibleSch}</div>
+                                <div class="text-xs font-semibold text-slate-500">Likely Eligible Scholarships</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-extrabold text-slate-900">${checkSch}</div>
+                                <div class="text-xs font-semibold text-slate-500">Scholarships Needing Info</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-extrabold text-slate-900">${matchingEx}</div>
+                                <div class="text-xs font-semibold text-slate-500">Matching Examinations</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-extrabold text-slate-900">${inProgressApps}</div>
+                                <div class="text-xs font-semibold text-slate-500">Applications in Progress</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Scholarships Preview -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-bold text-slate-900">Recommended Scholarships For You</h2>
+                            <button onclick="router.navigate('scholarships')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800">View All →</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            ${SCHOLARSHIPS.slice(0, 3).map(sch => {
+                                const evalRes = evaluateScholarship(sch, studentProfile);
+                                return `
+                                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between space-y-4">
+                                        <div class="space-y-2">
+                                            <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md text-[10px] font-semibold border ${evalRes.badgeClass}">
+                                                <i class="fa-solid ${evalRes.icon}"></i>
+                                                <span>${evalRes.status}</span>
+                                            </span>
+                                            <h4 class="font-bold text-slate-900 text-sm line-clamp-2">${sch.name}</h4>
+                                            <p class="text-xs text-indigo-600 font-semibold">${sch.amount}</p>
+                                        </div>
+                                        <button onclick="openDetailModal('scholarship', '${sch.id}')" class="w-full bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-bold py-2 rounded-lg transition">
+                                            Inspect Eligibility
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Recommended Examinations Preview -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-bold text-slate-900">Recommended Examinations</h2>
+                            <button onclick="router.navigate('exams')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800">View All →</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            ${EXAMS.slice(0, 3).map(ex => {
+                                const evalRes = evaluateExam(ex, studentProfile);
+                                return `
+                                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between space-y-4">
+                                        <div class="space-y-2">
+                                            <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md text-[10px] font-semibold border ${evalRes.badgeClass}">
+                                                <i class="fa-solid ${evalRes.icon}"></i>
+                                                <span>${evalRes.status}</span>
+                                            </span>
+                                            <h4 class="font-bold text-slate-900 text-sm line-clamp-2">${ex.name}</h4>
+                                            <p class="text-xs text-violet-600 font-semibold">Exam Date: ${ex.examDate}</p>
+                                        </div>
+                                        <button onclick="openDetailModal('exam', '${ex.id}')" class="w-full bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-bold py-2 rounded-lg transition">
+                                            Inspect Eligibility
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* --- 5. MY PROFILE PAGE --- */
+        function renderProfilePage() {
+            const completion = calculateProfileCompletion();
+            return `
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-slate-900">Student Profile</h1>
+                            <p class="text-sm text-slate-600">Enter your official details once to power scholarship and exam eligibility calculations.</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button type="button" onclick="loadDemoProfile()" class="bg-violet-50 border border-violet-200 text-violet-700 text-xs font-bold px-3 py-2 rounded-xl hover:bg-violet-100 transition" title="Load sample student for testing">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Load Demo Profile
+                            </button>
+                            <button type="button" onclick="resetProfile()" class="bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold px-3 py-2 rounded-xl hover:bg-rose-100 transition" title="Reset profile to blank">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Reset Profile
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Completion Indicator Bar -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="font-bold text-slate-900">Profile Completion Status</span>
+                            <span class="font-extrabold text-indigo-600">${completion}%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 h-full transition-all duration-500" style="width: ${completion}%"></div>
+                        </div>
+                        <p class="text-xs text-slate-500">
+                            ${completion === 0 ? 'Your profile is currently blank. Complete key fields below to unlock eligibility badges.' : 'Your profile is updated. Eligibility calculations reflect your current entries.'}
+                        </p>
+                    </div>
+
+                    <!-- Profile Form -->
+                    <form id="student-profile-form" class="bg-white rounded-2xl border border-slate-200 p-8 shadow-xs space-y-8">
+                        <!-- Section A: Basic Info -->
+                        <div class="space-y-4">
+                            <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 flex items-center">
+                                <i class="fa-solid fa-user text-indigo-600 mr-2"></i> A. Basic Information
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Student Full Name *</label>
+                                    <input type="text" name="name" value="${studentProfile.name || ''}" placeholder="e.g. Rahul Sharma" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">State of Residence / Domicile *</label>
+                                    <select name="state" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="" disabled ${!studentProfile.state ? 'selected' : ''}>-- Select State --</option>
+                                        <option value="Andhra Pradesh" ${studentProfile.state === 'Andhra Pradesh' ? 'selected' : ''}>Andhra Pradesh</option>
+                                        <option value="Delhi" ${studentProfile.state === 'Delhi' ? 'selected' : ''}>Delhi</option>
+                                        <option value="Karnataka" ${studentProfile.state === 'Karnataka' ? 'selected' : ''}>Karnataka</option>
+                                        <option value="Maharashtra" ${studentProfile.state === 'Maharashtra' ? 'selected' : ''}>Maharashtra</option>
+                                        <option value="Tamil Nadu" ${studentProfile.state === 'Tamil Nadu' ? 'selected' : ''}>Tamil Nadu</option>
+                                        <option value="Telangana" ${studentProfile.state === 'Telangana' ? 'selected' : ''}>Telangana</option>
+                                        <option value="Uttar Pradesh" ${studentProfile.state === 'Uttar Pradesh' ? 'selected' : ''}>Uttar Pradesh</option>
+                                        <option value="West Bengal" ${studentProfile.state === 'West Bengal' ? 'selected' : ''}>West Bengal</option>
+                                        <option value="Other State" ${studentProfile.state === 'Other State' ? 'selected' : ''}>Other State / UT</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Date of Birth *</label>
+                                    <input type="date" name="dob" value="${studentProfile.dob || ''}" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Age (Years) *</label>
+                                    <input type="number" name="age" value="${studentProfile.age || ''}" placeholder="e.g. 19" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section B: Educational Information -->
+                        <div class="space-y-4">
+                            <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 flex items-center">
+                                <i class="fa-solid fa-graduation-cap text-indigo-600 mr-2"></i> B. Educational Information
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Current Education Level *</label>
+                                    <select name="eduLevel" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="" disabled ${!studentProfile.eduLevel ? 'selected' : ''}>-- Select Education Level --</option>
+                                        <option value="Class 10" ${studentProfile.eduLevel === 'Class 10' ? 'selected' : ''}>Class 10</option>
+                                        <option value="Class 11" ${studentProfile.eduLevel === 'Class 11' ? 'selected' : ''}>Class 11</option>
+                                        <option value="Class 12" ${studentProfile.eduLevel === 'Class 12' ? 'selected' : ''}>Class 12</option>
+                                        <option value="Diploma" ${studentProfile.eduLevel === 'Diploma' ? 'selected' : ''}>Diploma</option>
+                                        <option value="Undergraduate" ${studentProfile.eduLevel === 'Undergraduate' ? 'selected' : ''}>Undergraduate</option>
+                                        <option value="Postgraduate" ${studentProfile.eduLevel === 'Postgraduate' ? 'selected' : ''}>Postgraduate</option>
+                                        <option value="PhD or research" ${studentProfile.eduLevel === 'PhD or research' ? 'selected' : ''}>PhD or research</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Course / Major Stream *</label>
+                                    <select name="stream" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="" disabled ${!studentProfile.stream ? 'selected' : ''}>-- Select Stream --</option>
+                                        <option value="Engineering / Technology" ${studentProfile.stream === 'Engineering / Technology' ? 'selected' : ''}>Engineering / Technology</option>
+                                        <option value="Medical" ${studentProfile.stream === 'Medical' ? 'selected' : ''}>Medical</option>
+                                        <option value="Science" ${studentProfile.stream === 'Science' ? 'selected' : ''}>Science</option>
+                                        <option value="Commerce" ${studentProfile.stream === 'Commerce' ? 'selected' : ''}>Commerce</option>
+                                        <option value="Arts / Humanities" ${studentProfile.stream === 'Arts / Humanities' ? 'selected' : ''}>Arts / Humanities</option>
+                                        <option value="Law" ${studentProfile.stream === 'Law' ? 'selected' : ''}>Law</option>
+                                        <option value="Architecture" ${studentProfile.stream === 'Architecture' ? 'selected' : ''}>Architecture</option>
+                                        <option value="Pharmacy" ${studentProfile.stream === 'Pharmacy' ? 'selected' : ''}>Pharmacy</option>
+                                        <option value="General Degree" ${studentProfile.stream === 'General Degree' ? 'selected' : ''}>General Degree</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Current Year of Study *</label>
+                                    <select name="yearOfStudy" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="" disabled ${!studentProfile.yearOfStudy ? 'selected' : ''}>-- Select Year of Study --</option>
+                                        <option value="1st Year" ${studentProfile.yearOfStudy === '1st Year' ? 'selected' : ''}>1st Year</option>
+                                        <option value="2nd Year" ${studentProfile.yearOfStudy === '2nd Year' ? 'selected' : ''}>2nd Year</option>
+                                        <option value="3rd Year" ${studentProfile.yearOfStudy === '3rd Year' ? 'selected' : ''}>3rd Year</option>
+                                        <option value="4th Year" ${studentProfile.yearOfStudy === '4th Year' ? 'selected' : ''}>4th Year</option>
+                                        <option value="Final Year" ${studentProfile.yearOfStudy === 'Final Year' ? 'selected' : ''}>Final Year</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Academic Performance (Marks % / CGPA) *</label>
+                                    <input type="number" step="0.1" name="marks" value="${studentProfile.marks || ''}" placeholder="e.g. 82.5" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section C: Financial Information -->
+                        <div class="space-y-4">
+                            <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 flex items-center">
+                                <i class="fa-solid fa-indian-rupee-sign text-indigo-600 mr-2"></i> C. Financial Information
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Annual Family Income (₹) *</label>
+                                    <input type="number" name="exactIncome" value="${studentProfile.exactIncome || ''}" placeholder="e.g. 220000" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Income Certificate Available? *</label>
+                                    <select name="incomeCertificate" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="" disabled ${!studentProfile.incomeCertificate ? 'selected' : ''}>-- Select Option --</option>
+                                        <option value="Yes" ${studentProfile.incomeCertificate === 'Yes' ? 'selected' : ''}>Yes</option>
+                                        <option value="No" ${studentProfile.incomeCertificate === 'No' ? 'selected' : ''}>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section D: Category & Special Eligibility -->
+                        <div class="space-y-4">
+                            <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 flex items-center">
+                                <i class="fa-solid id-card text-indigo-600 mr-2"></i> D. Category & Special Eligibility
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Social Category *</label>
+                                    <select name="category" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="" disabled ${!studentProfile.category ? 'selected' : ''}>-- Select Category --</option>
+                                        <option value="General" ${studentProfile.category === 'General' ? 'selected' : ''}>General</option>
+                                        <option value="OBC" ${studentProfile.category === 'OBC' ? 'selected' : ''}>OBC</option>
+                                        <option value="SC" ${studentProfile.category === 'SC' ? 'selected' : ''}>SC</option>
+                                        <option value="ST" ${studentProfile.category === 'ST' ? 'selected' : ''}>ST</option>
+                                        <option value="EWS" ${studentProfile.category === 'EWS' ? 'selected' : ''}>EWS</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Gender *</label>
+                                    <select name="gender" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="" disabled ${!studentProfile.gender ? 'selected' : ''}>-- Select Gender --</option>
+                                        <option value="Female" ${studentProfile.gender === 'Female' ? 'selected' : ''}>Female</option>
+                                        <option value="Male" ${studentProfile.gender === 'Male' ? 'selected' : ''}>Male</option>
+                                        <option value="Other" ${studentProfile.gender === 'Other' ? 'selected' : ''}>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Disability Status (PwD)</label>
+                                    <select name="pwd" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                                        <option value="No" ${studentProfile.pwd === 'No' ? 'selected' : ''}>No</option>
+                                        <option value="Yes" ${studentProfile.pwd === 'Yes' ? 'selected' : ''}>Yes</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Action -->
+                        <div class="pt-6 border-t border-slate-200 flex justify-end">
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center space-x-2">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Save Profile & Update Eligibility</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        function initProfileListeners() {
+            const form = document.getElementById('student-profile-form');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    const updated = {};
+                    formData.forEach((val, key) => { updated[key] = val; });
+                    saveProfileToStorage(updated);
+                    router.navigate('dashboard');
+                });
+            }
+        }
+
+        function loadDemoProfile() {
+            const demo = {
+                name: 'Ananya Sharma',
+                state: 'Delhi',
+                nationality: 'Indian',
+                dob: '2007-05-12',
+                age: '19',
+                eduLevel: 'Undergraduate',
+                course: 'B.Tech',
+                stream: 'Engineering / Technology',
+                yearOfStudy: '1st Year',
+                institutionType: 'Government / Public Institute',
+                institutionName: 'Delhi Technological University',
+                prevQualification: 'Class 12',
+                board: 'CBSE',
+                marks: '82.5',
+                incomeRange: '₹2,00,000 - ₹3,00,000',
+                exactIncome: '220000',
+                incomeCertificate: 'Yes',
+                category: 'General',
+                ews: 'No',
+                pwd: 'No',
+                minority: 'No',
+                gender: 'Female',
+                domicileState: 'Delhi',
+                firstGen: 'No',
+                examScores: 'JEE Main 95 Percentile'
+            };
+            saveProfileToStorage(demo);
+            router.navigate('profile');
+        }
+
+        function resetProfile() {
+            saveProfileToStorage({...DEFAULT_PROFILE});
+            router.navigate('profile');
+        }
+
+        /* --- 6. SAVED OPPORTUNITIES PAGE --- */
+        let savedTabFilter = 'all';
+
+        function renderSavedPage() {
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-slate-900">Saved Opportunities</h1>
+                            <p class="text-sm text-slate-600">Quick access to your bookmarked scholarships and examinations.</p>
+                        </div>
+                        <div class="flex space-x-2 bg-slate-200 p-1 rounded-xl">
+                            <button onclick="setSavedTab('all')" class="px-4 py-2 rounded-lg text-xs font-bold transition ${savedTabFilter === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}">All (${savedItems.length})</button>
+                            <button onclick="setSavedTab('scholarship')" class="px-4 py-2 rounded-lg text-xs font-bold transition ${savedTabFilter === 'scholarship' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}">Scholarships</button>
+                            <button onclick="setSavedTab('exam')" class="px-4 py-2 rounded-lg text-xs font-bold transition ${savedTabFilter === 'exam' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}">Exams</button>
+                        </div>
+                    </div>
+
+                    <div id="saved-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+            `;
+        }
+
+        function setSavedTab(tab) {
+            savedTabFilter = tab;
+            renderSavedPage();
+            renderSavedCardsContent();
+        }
+
+        function renderSavedCardsContent() {
+            const grid = document.getElementById('saved-grid');
+            if (!grid) return;
+
+            const filtered = savedItems.filter(item => {
+                if (savedTabFilter === 'all') return true;
+                return item.type === savedTabFilter;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-20 text-center bg-white rounded-2xl border border-slate-200">
+                        <i class="fa-solid fa-bookmark text-4xl text-slate-300 mb-3"></i>
+                        <h3 class="text-lg font-bold text-slate-700">No saved opportunities yet</h3>
+                        <p class="text-sm text-slate-500 mt-1">Bookmark scholarships and exams while browsing to view them here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(saved => {
+                let obj = saved.type === 'scholarship' ? SCHOLARSHIPS.find(s => s.id === saved.id) : EXAMS.find(e => e.id === saved.id);
+                if (!obj) return '';
+                const evalRes = saved.type === 'scholarship' ? evaluateScholarship(obj, studentProfile) : evaluateExam(obj, studentProfile);
+
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md">${saved.type.toUpperCase()}</span>
+                                <span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-semibold border ${evalRes.badgeClass}">
+                                    <i class="fa-solid ${evalRes.icon}"></i>
+                                    <span>${evalRes.status}</span>
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base line-clamp-2">${obj.name}</h3>
+                                <p class="text-xs text-slate-500 mt-1">${obj.provider || obj.authority}</p>
+                            </div>
+                        </div>
+                        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between gap-3">
+                            <button onclick="openDetailModal('${saved.type}', '${obj.id}')" class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold py-2.5 px-4 rounded-xl transition">
+                                View Details
+                            </button>
+                            <button onclick="toggleSaveItem('${obj.id}', '${saved.type}')" class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 flex items-center justify-center transition" title="Remove">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* --- 7. APPLICATION TRACKER PAGE --- */
+        function renderTrackerPage() {
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-slate-900">Application Tracker</h1>
+                            <p class="text-sm text-slate-600">Track your application statuses, deadlines, notes, and progress.</p>
+                        </div>
+                        <button onclick="openTrackerModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold px-5 py-3 rounded-xl shadow-md transition flex items-center space-x-2">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add Opportunity to Tracker</span>
+                        </button>
+                    </div>
+
+                    <!-- Tracker Table / List -->
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider font-bold">
+                                        <th class="p-4">Opportunity Name</th>
+                                        <th class="p-4">Type</th>
+                                        <th class="p-4">Status</th>
+                                        <th class="p-4">Target Deadline</th>
+                                        <th class="p-4">Personal Notes</th>
+                                        <th class="p-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 text-sm">
+                                    ${trackerItems.length === 0 ? `
+                                        <tr>
+                                            <td colspan="6" class="py-16 text-center text-slate-500">
+                                                <i class="fa-solid fa-list-check text-3xl text-slate-300 mb-2 block"></i>
+                                                No items in application tracker yet. Click "Add Opportunity to Tracker" to begin.
+                                            </td>
+                                        </tr>
+                                    ` : trackerItems.map(item => {
+                                        let obj = item.type === 'scholarship' ? SCHOLARSHIPS.find(s => s.id === item.id) : EXAMS.find(e => e.id === item.id);
+                                        if (!obj) return '';
+                                        const statusColors = {
+                                            'Interested': 'bg-slate-100 text-slate-700',
+                                            'Planning to Apply': 'bg-blue-50 text-blue-700',
+                                            'Application Started': 'bg-amber-50 text-amber-700',
+                                            'Submitted': 'bg-violet-50 text-violet-700',
+                                            'Under Review': 'bg-indigo-50 text-indigo-700',
+                                            'Approved': 'bg-emerald-50 text-emerald-700',
+                                            'Rejected': 'bg-rose-50 text-rose-700'
+                                        };
+                                        return `
+                                            <tr class="hover:bg-slate-50 transition">
+                                                <td class="p-4 font-bold text-slate-900">${obj.name}</td>
+                                                <td class="p-4 uppercase text-xs font-semibold text-slate-500">${item.type}</td>
+                                                <td class="p-4">
+                                                    <select onchange="updateTrackerStatus('${item.id}', this.value)" class="py-1.5 px-3 rounded-lg text-xs font-bold border border-slate-300 ${statusColors[item.status] || 'bg-slate-100'}">
+                                                        <option value="Interested" ${item.status === 'Interested' ? 'selected' : ''}>Interested</option>
+                                                        <option value="Planning to Apply" ${item.status === 'Planning to Apply' ? 'selected' : ''}>Planning to Apply</option>
+                                                        <option value="Application Started" ${item.status === 'Application Started' ? 'selected' : ''}>Application Started</option>
+                                                        <option value="Submitted" ${item.status === 'Submitted' ? 'selected' : ''}>Submitted</option>
+                                                        <option value="Under Review" ${item.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
+                                                        <option value="Approved" ${item.status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                                        <option value="Rejected" ${item.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                                    </select>
+                                                </td>
+                                                <td class="p-4 text-xs font-semibold text-slate-600">${item.deadline || obj.deadline || obj.examDate}</td>
+                                                <td class="p-4 text-xs text-slate-600 max-w-xs truncate">${item.notes || 'No notes added'}</td>
+                                                <td class="p-4 text-right">
+                                                    <button onclick="removeTrackerItem('${item.id}')" class="text-rose-600 hover:text-rose-800 p-2 text-xs font-bold" title="Remove">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initTrackerListeners() {
+            // Rendered dynamically
+        }
+
+        function toggleSaveItem(id, type) {
+            const index = savedItems.findIndex(i => i.id === id);
+            if (index !== -1) {
+                savedItems.splice(index, 1);
+                showToast('Removed from saved opportunities', 'success');
+            } else {
+                savedItems.push({ id, type, savedAt: new Date().toISOString() });
+                showToast('Opportunity saved successfully!', 'success');
+            }
+            saveSavedItemsToStorage();
+            if (router.currentRoute === 'scholarships') renderScholarshipCards();
+            if (router.currentRoute === 'exams') renderExamCards();
+            if (router.currentRoute === 'saved') renderSavedPage();
+            if (router.currentRoute === 'saved') renderSavedCardsContent();
+        }
+
+        function updateTrackerStatus(id, newStatus) {
+            const item = trackerItems.find(t => t.id === id);
+            if (item) {
+                item.status = newStatus;
+                saveTrackerItemsToStorage();
+                showToast('Application status updated', 'success');
+            }
+        }
+
+        function removeTrackerItem(id) {
+            trackerItems = trackerItems.filter(t => t.id !== id);
+            saveTrackerItemsToStorage();
+            showToast('Removed from tracker', 'success');
+            renderTrackerPage();
+        }
+
+        function openTrackerModal() {
+            const availableSchAndEx = [...SCHOLARSHIPS, ...EXAMS].filter(item => !trackerItems.some(t => t.id === item.id));
+            if (availableSchAndEx.length === 0) {
+                showToast('All opportunities are already in your tracker!', 'error');
+                return;
+            }
+
+            const modal = document.getElementById('detail-modal');
+            const box = document.getElementById('modal-content-box');
+            modal.classList.remove('hidden');
+
+            box.innerHTML = `
+                <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                    <h3 class="text-xl font-extrabold text-slate-900">Add Opportunity to Tracker</h3>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form id="add-tracker-form" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Select Opportunity *</label>
+                        <select id="tracker-select-id" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+                            <option value="" disabled selected>-- Choose Scholarship or Exam --</option>
+                            ${availableSchAndEx.map(item => `<option value="${item.id}">${item.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Initial Status *</label>
+                        <select id="tracker-select-status" class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                            <option value="Interested">Interested</option>
+                            <option value="Planning to Apply">Planning to Apply</option>
+                            <option value="Application Started">Application Started</option>
+                            <option value="Submitted">Submitted</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Personal Notes</label>
+                        <textarea id="tracker-notes" rows="3" placeholder="Add target documents, preparation notes, or application IDs..." class="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"></textarea>
+                    </div>
+                    <div class="pt-4 flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-sm font-bold hover:bg-slate-50">Cancel</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold shadow-md">Add to Tracker</button>
+                    </div>
+                </form>
+            `;
+
+            document.getElementById('add-tracker-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('tracker-select-id').value;
+                const status = document.getElementById('tracker-select-status').value;
+                const notes = document.getElementById('tracker-notes').value;
+                const isSch = SCHOLARSHIPS.some(s => s.id === id);
+
+                trackerItems.push({
+                    id,
+                    type: isSch ? 'scholarship' : 'exam',
+                    status,
+                    notes,
+                    addedAt: new Date().toISOString()
+                });
+                saveTrackerItemsToStorage();
+                closeModal();
+                showToast('Added to application tracker!', 'success');
+                renderTrackerPage();
+            });
+        }
+
+        /* --- DETAILED MODAL & WHY THIS RESULT? --- */
+        function openDetailModal(type, id) {
+            const obj = type === 'scholarship' ? SCHOLARSHIPS.find(s => s.id === id) : EXAMS.find(e => e.id === id);
+            if (!obj) return;
+
+            const evalRes = type === 'scholarship' ? evaluateScholarship(obj, studentProfile) : evaluateExam(obj, studentProfile);
+            const isSaved = savedItems.some(i => i.id === obj.id);
+            const modal = document.getElementById('detail-modal');
+            const box = document.getElementById('modal-content-box');
+            modal.classList.remove('hidden');
+
+            box.innerHTML = `
+                <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md mb-2 inline-block">${obj.category || obj.authority}</span>
+                        <h2 class="text-xl font-extrabold text-slate-900">${obj.name}</h2>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 shrink-0"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <div class="space-y-6 text-sm">
+                    <!-- Overview -->
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-2">Overview & Purpose</h4>
+                        <p class="text-slate-600 leading-relaxed">${obj.description || obj.purpose}</p>
+                    </div>
+
+                    <!-- Eligibility Evaluation Box ("Why This Result?") -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-slate-900 flex items-center">
+                                <i class="fa-solid fa-calculator text-indigo-600 mr-2"></i> Why This Result?
+                            </h4>
+                            <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${evalRes.badgeClass}">
+                                <i class="fa-solid ${evalRes.icon}"></i>
+                                <span>${evalRes.status}</span>
+                            </span>
+                        </div>
+
+                        ${evalRes.missing.length > 0 ? `
+                            <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-800 space-y-1">
+                                <span class="font-bold block"><i class="fa-solid fa-circle-exclamation mr-1"></i> Missing Information Needed:</span>
+                                <ul class="list-disc pl-4 space-y-0.5">
+                                    ${evalRes.missing.map(m => `<li>${m}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+
+                        <!-- Condition Breakdown Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left bg-white rounded-xl border border-slate-200 overflow-hidden">
+                                <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
+                                    <tr>
+                                        <th class="p-3">Condition</th>
+                                        <th class="p-3">Your Profile</th>
+                                        <th class="p-3">Requirement</th>
+                                        <th class="p-3 text-right">Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    ${evalRes.reasons.map(r => `
+                                        <tr>
+                                            <td class="p-3 font-semibold text-slate-900">${r.cond}</td>
+                                            <td class="p-3 text-slate-600">${r.user}</td>
+                                            <td class="p-3 text-slate-600">${r.req}</td>
+                                            <td class="p-3 text-right font-bold ${r.status === 'Met' ? 'text-emerald-600' : 'text-rose-600'}">${r.status}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Key Details Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <span class="text-xs font-semibold text-slate-500 block mb-1">${obj.amount ? 'Scholarship Benefit' : 'Exam Date'}</span>
+                            <span class="font-bold text-slate-900">${obj.amount || obj.examDate}</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <span class="text-xs font-semibold text-slate-500 block mb-1">Application Deadline</span>
+                            <span class="font-bold text-slate-900">${obj.deadline}</span>
+                        </div>
+                    </div>
+
+                    <!-- Official Link & Disclaimer -->
+                    <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <a href="${obj.url}" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-xs font-bold flex items-center">
+                            <i class="fa-solid fa-globe mr-1.5"></i> Visit Official Portal →
+                        </a>
+                        <div class="flex space-x-3">
+                            <button onclick="toggleSaveItem('${obj.id}', '${type}'); closeModal();" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition">
+                                <i class="fa-solid fa-bookmark mr-1"></i> ${isSaved ? 'Saved' : 'Save'}
+                            </button>
+                            <a href="${obj.url}" target="_blank" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition">
+                                Apply on Official Portal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('detail-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // Close modal on background click
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('detail-modal');
+            if (e.target === modal) closeModal();
+        });
+
+        /* ================= INITIALIZATION ================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNavProfileName();
+            router.navigate('home');
+        });
+    </script>
+</body>
+</html>
